@@ -1,9 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, Button, StyleSheet } from 'react-native';
 import { globalStyles } from '../styles/globalStyles';
 import { colors } from '../styles/colors';
+import { criarUsuario } from '../api/usuario';
+import { ScrollView } from 'react-native-web';
 
 export default function RegisterScreen({ navigation }) {
+
+  const [nome, setNome] = useState('');
+  const [telefone, setTelefone] = useState('');
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+
+  const handleRegister = async () => {
+    if(!nome || !email || !senha) {
+      alert("Preencha todos os Campos obrigatórios");
+      return;
+    }
+    try {
+      const novoUsuario = {
+        nome,
+        telefone,
+        email,
+        senha,
+        is_cuidador: false,
+        imagem_perfil: null,
+      };
+
+      await criarUsuario(novoUsuario);
+      alert("Cadastro Realizado com sucesso!");
+      navigation.replace("Login");
+      
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao cadastrar. Tente novamente")
+    }
+  };
+
   return (
     <View style={[globalStyles.containerCenter, { backgroundColor: colors.marrom }]}>
       <Image source={require('../../assets/images/logo.png')} style={globalStyles.logo} />
@@ -15,6 +48,8 @@ export default function RegisterScreen({ navigation }) {
         <TextInput
           style={globalStyles.input}
           placeholder="Digite seu nome"
+          value = {nome}
+          onChangeText={setNome}
           placeholderTextColor={colors.cinzaClaro}
         />
 
@@ -22,6 +57,8 @@ export default function RegisterScreen({ navigation }) {
         <TextInput
           style={globalStyles.input}
           placeholder="Digite seu telefone"
+          value={telefone}
+          onChangeText={setTelefone}
           placeholderTextColor={colors.cinzaClaro}
         />
 
@@ -29,6 +66,8 @@ export default function RegisterScreen({ navigation }) {
         <TextInput
           style={globalStyles.input}
           placeholder="Digite seu email"
+          value={email}
+          onChangeText={setEmail}
           placeholderTextColor={colors.cinzaClaro}
         />
 
@@ -37,10 +76,12 @@ export default function RegisterScreen({ navigation }) {
           style={globalStyles.input}
           placeholder="Digite sua senha"
           secureTextEntry
+          value = {senha}
+          onChangeText={setSenha}
           placeholderTextColor={colors.cinzaClaro}
         />
 
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
+        <TouchableOpacity style={styles.button} onPress={handleRegister}>
           <Text style={styles.buttonText}>Cadastrar</Text>
         </TouchableOpacity>
       </View>

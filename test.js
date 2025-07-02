@@ -1,10 +1,4 @@
-const {
-  listarUsuarios,
-  criarUsuario,
-  atualizarUsuario,
-  deletarUsuario,
-  buscarUsuarioPorId,
-} = require("./src/api/usuario");
+const { listarUsuarios, criarUsuario, atualizarUsuario, deletarUsuario, buscarUsuarioPorId, } = require("./src/api/usuario");
 
 // Teste básico: Listar todos os usuários
 listarUsuarios()
