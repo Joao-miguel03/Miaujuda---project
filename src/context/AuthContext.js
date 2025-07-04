@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
   const isAdmin = usuario?.is_admin || false;
 
   return (
-    <AuthContext.Provider value={{ usuario, login, logout, isAdmin }}>
+    <AuthContext.Provider value={{ usuario, setUsuario, login, logout, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );

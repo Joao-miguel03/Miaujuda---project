@@ -1,12 +1,13 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SplashScreen from '../screens/SplashScreen';
-import LoginScreen from '../screens/LoginScreen';
-import RegisterScreen from '../screens/RegisterScreen';
 import HomeScreen from '../screens/HomeScreen';
-import NewsListScreen from '../screens/NewsListScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import RegisterNewsScreen from '../screens/RegisterNewsScreen';
+import LoginScreen from '../screens/user/LoginScreen';
+import RegisterScreen from '../screens/user/RegisterScreen';
+import ProfileScreen from '../screens/user/ProfileScreen';
+import NewsListScreen from '../screens/news/NewsListScreen';
+import RegisterNewsScreen from '../screens/news/RegisterNewsScreen';
+import RegisterVeterinarianScreen from '../screens/veterinarian/RegisterVeterinarianScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,7 @@ export default function AuthNavigator() {
       <Stack.Screen name="NewsList" component={NewsListScreen} />
       <Stack.Screen name="RegisterNews" component={RegisterNewsScreen} />
       <Stack.Screen name = "Profile" component={ProfileScreen} />
+      <Stack.Screen name = "RegisterVeterinarian" component={RegisterVeterinarianScreen} />
     </Stack.Navigator>
   );
 }

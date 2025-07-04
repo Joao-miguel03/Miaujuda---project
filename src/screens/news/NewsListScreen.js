@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Linking, } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ScrollView, Linking, StyleSheet, } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import AppLayout from '../components/AppLayout';
-import { colors } from '../styles/colors';
-import { listarNoticias } from '../api/noticia';
+import AppLayout from '../../components/AppLayout';
+import { colors } from '../../styles/colors';
+import { globalStyles } from '../../styles/globalStyles';
+import { listarNoticias } from '../../api/noticia';
 
 export default function NewsListScreen({ navigation }) {
   const [noticias, setNoticias] = useState([]);
@@ -27,7 +28,7 @@ export default function NewsListScreen({ navigation }) {
 
   return (
     <AppLayout navigation={navigation}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={globalStyles.scrollVertical}>
         {/* Botão para adicionar nova notícia */}
         <TouchableOpacity
           style={styles.addButton}
@@ -39,14 +40,14 @@ export default function NewsListScreen({ navigation }) {
 
         {/* Lista de notícias */}
         {noticias.map((noticia) => (
-          <View key={noticia.id} style={styles.card}>
+          <View key={noticia.id} style={globalStyles.card}>
             <Image
               source={
                 noticia.imagem_materia
                   ? { uri: noticia.imagem_materia }
-                  : require('../../assets/images/newsDefault.jpeg')
+                  : require('../../../assets/images/newsDefault.jpeg')
               }
-              style={styles.image}
+              style={globalStyles.cardImage}
             />
             <Text style={styles.titulo}>{noticia.titulo}</Text>
             <Text style={styles.conteudo} numberOfLines={3}>
@@ -68,10 +69,6 @@ export default function NewsListScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    paddingBottom: 100,
-  },
   addButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -85,18 +82,6 @@ const styles = StyleSheet.create({
     color: colors.marrom,
     fontWeight: 'bold',
     marginLeft: 8,
-  },
-  card: {
-    backgroundColor: colors.bege,
-    borderRadius: 12,
-    padding: 10,
-    marginBottom: 20,
-  },
-  image: {
-    width: '100%',
-    height: 180,
-    borderRadius: 8,
-    marginBottom: 10,
   },
   titulo: {
     fontSize: 16,

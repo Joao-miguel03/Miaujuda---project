@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
-import { globalStyles } from '../styles/globalStyles';
-import { colors } from '../styles/colors';
-import { listarUsuarios } from '../api/usuario';
-import { AuthContext } from '../context/AuthContext';
+import { globalStyles } from '../../styles/globalStyles';
+import { colors } from '../../styles/colors';
+import { listarUsuarios } from '../../api/usuario';
+import { AuthContext } from '../../context/AuthContext';
 import { ScrollView } from 'react-native-web';
+import bcrypt from 'react-native-bcrypt'
 
 export default function LoginScreen({ navigation }) {
   const { login } = useContext(AuthContext);
@@ -16,25 +17,23 @@ export default function LoginScreen({ navigation }) {
       const res = await listarUsuarios();
       const usuarios = res.data || res;
       
-      const usuarioEncontrado = usuarios.find(
-        (u) => u.email === email && u.senha === senha
-      );
+      const usuarioEncontrado = usuarios.find((u) => u.email === email);
 
-      if (usuarioEncontrado) {
+      if (usuarioEncontrado && bcrypt.compareSync(senha, usuarioEncontrado.senha)) {
         login(usuarioEncontrado);
         navigation.replace('Home');
       } else {
-        alert('Erro. Email ou senha inválidos');
+        Alert.alert('Erro','Email ou senha inválidas');
       }
     } catch (error) {
       console.error(error);
-      alert("Erro. Email ou senha inválidos");
+      Alert.alert('Erro', 'Email ou senha inválidos');
     }
   }
 
   return (
     <View style={[globalStyles.containerCenter,{backgroundColor: colors.marrom}]}>
-      <Image source={require('../../assets/images/logo.png')} style={globalStyles.logo} />
+      <Image source={require('../../../assets/images/logo.png')} style={globalStyles.logo} />
 
       <View style={styles.loginBox}>
         <Text style={styles.title}>LOGIN</Text>
@@ -71,7 +70,7 @@ export default function LoginScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <Image source={require("../../assets/images/security_cat.png")} style={globalStyles.security_cat}/>
+      <Image source={require("../../../assets/images/security_cat.png")} style={globalStyles.security_cat}/>
 
     </View>
   );

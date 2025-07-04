@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, Button, StyleSheet } from 'react-native';
-import { globalStyles } from '../styles/globalStyles';
-import { colors } from '../styles/colors';
-import { criarUsuario } from '../api/usuario';
+import { View, Text, TextInput, TouchableOpacity, Image, Button, StyleSheet, Alert } from 'react-native';
+import { globalStyles } from '../../styles/globalStyles';
+import { colors } from '../../styles/colors';
+import { criarUsuario } from '../../api/usuario';
 import { ScrollView } from 'react-native-web';
+import bcrypt  from 'react-native-bcrypt'
 
 export default function RegisterScreen({ navigation }) {
 
@@ -18,28 +19,31 @@ export default function RegisterScreen({ navigation }) {
       return;
     }
     try {
+      const salt = bcrypt.genSaltSync(10);
+      const senhaCriptografada = bcrypt.hashSync(senha, salt);
+
       const novoUsuario = {
         nome,
         telefone,
         email,
-        senha,
+        senha: senhaCriptografada,
         is_cuidador: false,
         imagem_perfil: null,
       };
 
       await criarUsuario(novoUsuario);
-      alert("Cadastro Realizado com sucesso!");
+      Alert.alert('Sucesso',"Cadastro Realizado com sucesso!");
       navigation.replace("Login");
       
     } catch (error) {
       console.error(error);
-      alert("Erro ao cadastrar. Tente novamente")
+      Alert.alert('Erro', 'Não foi possivel cadastrar. Tente novamente')
     }
   };
 
   return (
     <View style={[globalStyles.containerCenter, { backgroundColor: colors.marrom }]}>
-      <Image source={require('../../assets/images/logo.png')} style={globalStyles.logo} />
+      <Image source={require('../../../assets/images/logo.png')} style={globalStyles.logo} />
 
       <View style={styles.registerBox}>
         <Text style={styles.title}>CADASTRAR</Text>
@@ -86,7 +90,7 @@ export default function RegisterScreen({ navigation }) {
         </TouchableOpacity>
       </View>
     
-      <Image source={require("../../assets/images/security_cat.png")} style={globalStyles.security_cat}/>
+      <Image source={require("../../../assets/images/security_cat.png")} style={globalStyles.security_cat}/>
 
     </View>
   );

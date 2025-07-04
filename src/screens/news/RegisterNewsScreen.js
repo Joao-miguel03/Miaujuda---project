@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, } from 'react-native';
-import AppLayout from '../components/AppLayout';
-import { globalStyles } from '../styles/globalStyles';
-import { colors } from '../styles/colors';
-import { criarNoticia } from '../api/noticia';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, } from 'react-native';
+import AppLayout from '../../components/AppLayout';
+import { globalStyles } from '../../styles/globalStyles';
+import { colors } from '../../styles/colors';
+import { criarNoticia } from '../../api/noticia';
 
 export default function RegisterNewsScreen({ navigation }) {
   const [titulo, setTitulo] = useState('');
@@ -38,10 +38,9 @@ export default function RegisterNewsScreen({ navigation }) {
 
   return (
     <AppLayout navigation={navigation}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={globalStyles.scrollVertical}>
         <View style={styles.registerBox}>
           <Text style={styles.title}>ADICIONAR NOTÍCIA</Text>
-
           <Text style={styles.label}>Título</Text>
           <TextInput
             style={globalStyles.input}
@@ -99,10 +98,6 @@ export default function RegisterNewsScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingVertical: 20,
-    paddingHorizontal: 16,
-  },
   registerBox: {
     backgroundColor: colors.marrom,
     borderRadius: 12,
