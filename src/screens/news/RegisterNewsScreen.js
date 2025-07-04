@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, Image } from 'react-native';
 import AppLayout from '../../components/AppLayout';
 import { globalStyles } from '../../styles/globalStyles';
 import { colors } from '../../styles/colors';
@@ -23,7 +23,7 @@ export default function RegisterNewsScreen({ navigation }) {
       conteudo,
       autor,
       link_materia: link,
-      imagem_materia: imagem,
+      imagem: imagem,
     };
 
     try {
@@ -92,6 +92,9 @@ export default function RegisterNewsScreen({ navigation }) {
             <Text style={styles.buttonText}>Publicar</Text>
           </TouchableOpacity>
         </View>
+        
+        <Image source={require("../../../assets/images/news-cat.png")} style={globalStyles.news_cat}/>
+
       </ScrollView>
     </AppLayout>
   );

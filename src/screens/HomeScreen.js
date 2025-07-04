@@ -5,6 +5,7 @@ import { globalStyles } from '../styles/globalStyles';
 import { colors } from '../styles/colors';
 import { listarVeterinarios } from '../api/veterinario';
 import { listarGatos } from '../api/gato';
+import { listarNoticias } from '../api/noticia';
 import { listarUsuarios } from '../api/usuario';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -13,6 +14,7 @@ export default function HomeScreen({ navigation }) {
   const [gatos, setGatos] = useState([]);
   const [lares, setLares] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
+  const [noticias, setNoticias] = useState([]);
 
   useEffect(() => {
     async function carregarDados() {
@@ -20,30 +22,31 @@ export default function HomeScreen({ navigation }) {
         const vetsRes = await listarVeterinarios();
         const gatosRes = await listarGatos();
         const usersRes = await listarUsuarios();
+        const newsRes = await listarNoticias();
 
         const vetsList = vetsRes.data || vetsRes;
         const usersList = usersRes.data || usersRes;
         const gatosList = gatosRes.data || gatosRes;
+        const newsList = newsRes.data || newsRes
 
-        // Junta os dados dos veterinários com dados dos usuários (imagem/nome)
         const vetsCompletos = vetsList.map(vet => {
           const user = usersList.find(u => u.id === vet.id_usuario);
           return {
             ...vet,
             imagem_perfil: user?.imagem_perfil || null,
-            nome: user?.nome || 'Veterinário',
+            nome: vet.nome || user?.nome || 'Veterinário',
           };
         });
 
         const laresList = usersList.filter(u => u.is_cuidador);
 
-        // Ordena os veterinários pela média de avaliação
         const ordenados = vetsCompletos.sort((a, b) => b.avaliacao_media - a.avaliacao_media);
 
         setVeterinarios(ordenados);
         setUsuarios(usersList);
         setGatos(gatosList);
         setLares(laresList);
+        setNoticias(newsList);
       } catch (error) {
         console.error('Erro ao carregar dados da Home:', error);
       }
@@ -52,20 +55,24 @@ export default function HomeScreen({ navigation }) {
     carregarDados();
   }, []);
 
-  const renderMiniCards = (data) => (
+  const renderMiniCards = (data, nav, mostrarTitulo = false) => (
     <>
       {data.slice(0, 4).map((item, index) => (
-        <Image
-          key={index}
-          source={
-            item.imagem_perfil || item.imagem
-              ? { uri: item.imagem_perfil || item.imagem }
-              : require('../../assets/images/defaultprofile.jpeg')
-          }
-          style={styles.cardImage}
-        />
+        <View key={index} style={styles.cardContainer}>
+          <Image
+            source={
+              item.imagem_perfil || item.imagem
+                ? { uri: item.imagem_perfil || item.imagem }
+                : mostrarTitulo
+                  ? require('../../assets/images/newsDefault.jpeg')
+                  : require('../../assets/images/defaultprofile.jpeg')
+            }
+            style={styles.cardImage}
+          />
+          <Text style={styles.cardLabel}>{mostrarTitulo ? item.titulo || 'Sem título' : item.nome || 'Nome não informado'}</Text>
+        </View>
       ))}
-      <TouchableOpacity style={styles.verMaisBtn}>
+      <TouchableOpacity onPress={()=> navigation.navigate(nav)} style={styles.verMaisBtn}>
         <Ionicons name="chevron-forward" size={24} color="#fff" />
       </TouchableOpacity>
     </>
@@ -74,40 +81,46 @@ export default function HomeScreen({ navigation }) {
   return (
     <AppLayout navigation={navigation}>
       <ScrollView contentContainerStyle={globalStyles.scrollVertical}>
-        {/* Botão topo */}
         <TouchableOpacity style={styles.topButton} onPress={() => navigation.navigate('RegisterVeterinarian')}>
           <Text style={styles.ButtonText}>CADASTRAR VETERINÁRIO</Text>
           <Ionicons name="add" size={18} color="#fff" style={{ marginLeft: 4 }} />
         </TouchableOpacity>
 
-        {/* Lista de Veterinários */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>VETERINÁRIOS</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={globalStyles.scrollHorizontal}>
-            {renderMiniCards(veterinarios)}
+            {renderMiniCards(veterinarios, nav='VeterinarianList')}
           </ScrollView>
         </View>
 
-        {/* Lista de Gatos */}
         <TouchableOpacity style={styles.addCatBtn} onPress={() => navigation.navigate('RegisterGato')}>
           <Text style={styles.ButtonText}> CADASTRAR GATO </Text>
           <Image source={require('../../assets/images/icon_cat.webp')} style={styles.catIcon} />
           <Ionicons name="add" style={[{marginRight:2}]} size={18} color="#fff" />
         </TouchableOpacity>
+
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>GATOS PARA ADOTAR</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={globalStyles.scrollHorizontal}>
-            {renderMiniCards(gatos)}
+            {renderMiniCards(gatos, nav='CatList')}
           </ScrollView>
         </View>
 
-        {/* Lista de Lares Temporários */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>LAR TEMPORÁRIO</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={globalStyles.scrollHorizontal}>
-            {renderMiniCards(lares)}
+            {renderMiniCards(lares, nav='ListLarTemp')}
           </ScrollView>
         </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>NOTÍCIAS</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={globalStyles.scrollHorizontal}>
+            {renderMiniCards(noticias,nav='NewsList', mostrarTitulo=true)}
+          </ScrollView>
+        </View>
+
+
       </ScrollView>
     </AppLayout>
   );
@@ -170,11 +183,21 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
   },
+  cardContainer: {
+    alignItems: 'center',
+    marginHorizontal: 8,
+    maxWidth: 100,
+  },
   cardImage: {
     width: 80,
     height: 80,
     borderRadius: 12,
-    marginHorizontal: 8,
+  },
+  cardLabel: {
+    color: colors.branco,
+    fontSize: 12,
+    marginTop: 4,
+    textAlign:'center',
   },
   verMaisBtn: {
     justifyContent: 'center',

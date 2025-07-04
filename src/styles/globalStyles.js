@@ -27,10 +27,20 @@ export const globalStyles = StyleSheet.create({
   },
 
   security_cat: {
-    width: 120,
-    height: 120,
+    width: 400,
+    height: 400,
     marginTop: 20,
+    marginBottom: -100,
     resizeMode: 'contain',
+    alignSelf:'center',
+  },
+  news_cat: {
+    width: 230,
+    height: 230,
+    marginTop: 20,
+    marginBottom: -100,
+    resizeMode: 'contain',
+    alignSelf:'center',
   },
 
   scrollVertical: {

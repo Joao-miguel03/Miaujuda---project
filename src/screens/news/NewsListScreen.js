@@ -43,8 +43,8 @@ export default function NewsListScreen({ navigation }) {
           <View key={noticia.id} style={globalStyles.card}>
             <Image
               source={
-                noticia.imagem_materia
-                  ? { uri: noticia.imagem_materia }
+                noticia.imagem
+                  ? { uri: noticia.imagem }
                   : require('../../../assets/images/newsDefault.jpeg')
               }
               style={globalStyles.cardImage}

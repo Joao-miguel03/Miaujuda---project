@@ -70,7 +70,7 @@ export default function LoginScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <Image source={require("../../../assets/images/security_cat.png")} style={globalStyles.security_cat}/>
+      <Image source={require("../../../assets/images/security-cat.png")} style={globalStyles.security_cat}/>
 
     </View>
   );

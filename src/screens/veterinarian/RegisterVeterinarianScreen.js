@@ -7,10 +7,10 @@ import { AuthContext } from '../../context/AuthContext';
 import { criarVeterinario } from '../../api/veterinario';
 
 export default function RegisterVeterinarianScreen({ navigation }) {
-  const { usuario } = useContext(AuthContext); 
+  const { usuario } = useContext(AuthContext);
+  const [nome, setNome] = useState('');
+  const [crmv, setCrmv] = useState('');
   const [especialidades, setEspecialidades] = useState('');
-  const [formacao, setFormacao] = useState('');
-  const [experiencia, setExperiencia] = useState('');
   const [descricao, setDescricao] = useState('');
   const [endereco, setEndereco] = useState('');
   const [cidade, setCidade] = useState('');
@@ -25,9 +25,9 @@ export default function RegisterVeterinarianScreen({ navigation }) {
 
     const novoVet = {
       id_usuario: usuario.id,
+      nome,
+      crmv,
       especialidades: especialidades.split(',').map(e => e.trim()),
-      formacao,
-      experiencia_anos: parseInt(experiencia),
       descricao,
       endereco,
       cidade,
@@ -51,31 +51,30 @@ export default function RegisterVeterinarianScreen({ navigation }) {
         <View style={styles.registerBox}>
           <Text style={styles.title}>CADASTRAR VETERINÁRIO</Text>
 
+          <Text style={styles.label}>Nome</Text>
+          <TextInput
+            style={globalStyles.input}
+            placeholder="Digite seu nome"
+            value={nome}
+            onChangeText={setNome}
+            placeholderTextColor={colors.cinzaClaro}
+          />
+
+          <Text style={styles.label}>Nº CRMV</Text>
+          <TextInput
+            style={globalStyles.input}
+            placeholder="Digite seu número CRMV"
+            value={crmv}
+            onChangeText={setCrmv}
+            placeholderTextColor={colors.cinzaClaro}
+          />
+
           <Text style={styles.label}>Especialidades (separe por vírgulas)</Text>
           <TextInput
             style={globalStyles.input}
             placeholder="Ex: Gatos, Cirurgia, Emergência"
             value={especialidades}
             onChangeText={setEspecialidades}
-            placeholderTextColor={colors.cinzaClaro}
-          />
-
-          <Text style={styles.label}>Formação</Text>
-          <TextInput
-            style={globalStyles.input}
-            placeholder="Ex: Medicina Veterinária - UFPE"
-            value={formacao}
-            onChangeText={setFormacao}
-            placeholderTextColor={colors.cinzaClaro}
-          />
-
-          <Text style={styles.label}>Anos de Experiência</Text>
-          <TextInput
-            style={globalStyles.input}
-            placeholder="Ex: 5"
-            value={experiencia}
-            onChangeText={setExperiencia}
-            keyboardType="numeric"
             placeholderTextColor={colors.cinzaClaro}
           />
 
