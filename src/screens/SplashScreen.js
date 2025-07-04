@@ -8,6 +8,7 @@ export default function SplashScreen({ navigation }) {
     "Os bigodes dos gatos ajudam na percepção de espaço.",
     "Gatos dormem cerca de 70% da vida.",
     "Eles usam o miado apenas para se comunicar com humanos.",
+    "Gatos em japones ne escreve 猫 🐱."
   ];
 
   const [curiosidade, setCuriosidade] = useState("");
@@ -19,7 +20,7 @@ export default function SplashScreen({ navigation }) {
 
     setTimeout(() => {
       navigation.replace('Login');
-    }, 5000);
+    }, 3000);
   }, []);
 
   return (
