@@ -8,6 +8,7 @@ import ProfileScreen from '../screens/user/ProfileScreen';
 import NewsListScreen from '../screens/news/NewsListScreen';
 import RegisterNewsScreen from '../screens/news/RegisterNewsScreen';
 import RegisterVeterinarianScreen from '../screens/veterinarian/RegisterVeterinarianScreen';
+import CadastrarConsultaScreen from '../screens/consulta/CadastrarConsultaScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,7 @@ export default function AuthNavigator() {
       <Stack.Screen name="RegisterNews" component={RegisterNewsScreen} />
       <Stack.Screen name = "Profile" component={ProfileScreen} />
       <Stack.Screen name = "RegisterVeterinarian" component={RegisterVeterinarianScreen} />
+      <Stack.Screen name='MarcarConsulta' component={CadastrarConsultaScreen} />
     </Stack.Navigator>
   );
 }

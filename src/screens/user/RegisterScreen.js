@@ -88,6 +88,11 @@ export default function RegisterScreen({ navigation }) {
         <TouchableOpacity style={styles.button} onPress={handleRegister}>
           <Text style={styles.buttonText}>Cadastrar</Text>
         </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={()=>navigation.goBack()}>
+        <Text style={styles.buttonText}> Voltar </Text>
+      </TouchableOpacity>
+
       </View>
     
       <Image source={require("../../../assets/images/security-cat.png")} style={globalStyles.security_cat}/>

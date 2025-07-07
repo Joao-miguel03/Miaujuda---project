@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import AppLayout from '../components/AppLayout';
 import { globalStyles } from '../styles/globalStyles';
@@ -8,13 +8,18 @@ import { listarGatos } from '../api/gato';
 import { listarNoticias } from '../api/noticia';
 import { listarUsuarios } from '../api/usuario';
 import { Ionicons } from '@expo/vector-icons';
+import { AuthContext } from '../context/AuthContext';
 
 export default function HomeScreen({ navigation }) {
+  const {usuario} = useContext(AuthContext);
+
   const [veterinarios, setVeterinarios] = useState([]);
   const [gatos, setGatos] = useState([]);
   const [lares, setLares] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
   const [noticias, setNoticias] = useState([]);
+
+  const isVeterinarioLogado = veterinarios.some(v => v.id_usuario === usuario?.id);
 
   useEffect(() => {
     async function carregarDados() {
@@ -81,11 +86,20 @@ export default function HomeScreen({ navigation }) {
   return (
     <AppLayout navigation={navigation}>
       <ScrollView contentContainerStyle={globalStyles.scrollVertical}>
-        <TouchableOpacity style={styles.topButton} onPress={() => navigation.navigate('RegisterVeterinarian')}>
-          <Text style={styles.ButtonText}>CADASTRAR VETERINÁRIO</Text>
-          <Ionicons name="add" size={18} color="#fff" style={{ marginLeft: 4 }} />
-        </TouchableOpacity>
-
+        
+        {usuario && (
+          <TouchableOpacity style={styles.topButton} onPress={() => isVeterinarioLogado
+            ? navigation.navigate('MarcarConsulta')
+            : navigation.navigate('RegisterVeterinarian')
+          }
+          >
+            <Text style={styles.ButtonText}>
+              {isVeterinarioLogado ? 'MARCAR CONSULTA' : 'CADASTRAR VETERINÁRIO'}
+            </Text>
+            <Ionicons name='add' size={18} color={colors.branco} style={{ marginLeft:4 }} />
+          </TouchableOpacity>
+        )}
+        
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>VETERINÁRIOS</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={globalStyles.scrollHorizontal}>
@@ -171,7 +185,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 4,
     borderWidth: 1,
-    borderRadius:6,
+    borderRadius:12,
     borderColor: colors.branco,
     alignItems: 'flex-end',
     alignSelf: 'center',
@@ -187,6 +201,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 8,
     maxWidth: 100,
+    borderWidth:1,
+    borderColor: colors.branco,
+    borderRadius:5,
   },
   cardImage: {
     width: 80,
