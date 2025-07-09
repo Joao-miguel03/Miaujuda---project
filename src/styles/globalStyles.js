@@ -42,6 +42,14 @@ export const globalStyles = StyleSheet.create({
     resizeMode: 'contain',
     alignSelf:'center',
   },
+  doctor_cat: {
+    width: 230,
+    height: 230,
+    marginTop: 20,
+    marginBottom: -100,
+    resizeMode: 'contain',
+    alignSelf:'center',
+  },
 
   scrollVertical: {
     padding: 16,

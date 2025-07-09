@@ -4,7 +4,6 @@ import { globalStyles } from '../../styles/globalStyles';
 import { colors } from '../../styles/colors';
 import { listarUsuarios } from '../../api/usuario';
 import { AuthContext } from '../../context/AuthContext';
-import { ScrollView } from 'react-native-web';
 import bcrypt from 'react-native-bcrypt'
 
 export default function LoginScreen({ navigation }) {
@@ -57,7 +56,7 @@ export default function LoginScreen({ navigation }) {
           placeholderTextColor={colors.cinzaClaro}
         />
 
-        <TouchableOpacity onPress={()=> navigation.navigate('ForgotPassword')}>
+        <TouchableOpacity onPress={()=> navigation.navigate('RecoverPassword')}>
           <Text style={styles.forgot}>Esqueceu sua senha?</Text>
         </TouchableOpacity>
 

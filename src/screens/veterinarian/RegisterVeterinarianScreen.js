@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, Alert, Image } from 'react-native';
 import AppLayout from '../../components/AppLayout';
 import { globalStyles } from '../../styles/globalStyles';
 import { colors } from '../../styles/colors';
@@ -129,6 +129,9 @@ export default function RegisterVeterinarianScreen({ navigation }) {
             <Text style={styles.buttonText}>Cadastrar</Text>
           </TouchableOpacity>
         </View>
+
+        <Image source={require("../../../assets/images/doctor-cat.png")} style={globalStyles.doctor_cat}/>
+
       </ScrollView>
     </AppLayout>
   );

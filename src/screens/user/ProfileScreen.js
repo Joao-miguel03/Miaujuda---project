@@ -90,7 +90,7 @@ export default function ProfileScreen({ navigation }) {
           />
         </View>
 
-        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+        <TouchableOpacity onPress={() => navigation.navigate('RecoverPassword')}>
           <Text style={styles.option}>mudar senha</Text>
         </TouchableOpacity>
 

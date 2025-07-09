@@ -88,6 +88,11 @@ export default function RegisterScreen({ navigation }) {
         <TouchableOpacity style={styles.button} onPress={handleRegister}>
           <Text style={styles.buttonText}>Cadastrar</Text>
         </TouchableOpacity>
+
+      <TouchableOpacity style={styles.back} onPress={()=>navigation.goBack()}>
+        <Text style={styles.textBack}> Voltar </Text>
+      </TouchableOpacity>
+
       </View>
     
       <Image source={require("../../../assets/images/security-cat.png")} style={globalStyles.security_cat}/>
@@ -128,5 +133,15 @@ const styles = StyleSheet.create({
     color: colors.marrom,
     textAlign: 'center',
     fontWeight: 'bold',
+  },
+  back:{
+    color: colors.branco,
+    fontSize: 13,
+    textAlign: 'center',
+  },
+  textBack:{
+    color: colors.branco,
+    fontSize: 13,
+    textAlign: 'center',
   },
 });

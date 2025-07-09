@@ -12,6 +12,11 @@ async function buscarVeterinarioPorId(id) {
   return await apiFetch(`${TABELA}?id=eq.${id}`);
 }
 
+// 🔍 READ (por ID do usuário)
+async function buscarVeterinarioPorUsuario(id_usuario) {
+  return await apiFetch(`${TABELA}?id_usuario=eq.${id_usuario}`);
+}
+
 // ➕ CREATE
 async function criarVeterinario(veterinario) {
   return await apiFetch(TABELA, {
@@ -38,6 +43,7 @@ async function deletarVeterinario(id) {
 module.exports = {
   listarVeterinarios,
   buscarVeterinarioPorId,
+  buscarVeterinarioPorUsuario,
   criarVeterinario,
   atualizarVeterinario,
   deletarVeterinario,
