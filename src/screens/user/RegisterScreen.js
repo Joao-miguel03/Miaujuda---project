@@ -89,8 +89,8 @@ export default function RegisterScreen({ navigation }) {
           <Text style={styles.buttonText}>Cadastrar</Text>
         </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={()=>navigation.goBack()}>
-        <Text style={styles.buttonText}> Voltar </Text>
+      <TouchableOpacity style={styles.back} onPress={()=>navigation.goBack()}>
+        <Text style={styles.textBack}> Voltar </Text>
       </TouchableOpacity>
 
       </View>
@@ -133,5 +133,15 @@ const styles = StyleSheet.create({
     color: colors.marrom,
     textAlign: 'center',
     fontWeight: 'bold',
+  },
+  back:{
+    color: colors.branco,
+    fontSize: 13,
+    textAlign: 'center',
+  },
+  textBack:{
+    color: colors.branco,
+    fontSize: 13,
+    textAlign: 'center',
   },
 });

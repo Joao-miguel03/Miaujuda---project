@@ -107,7 +107,7 @@ export default function HomeScreen({ navigation }) {
           </ScrollView>
         </View>
 
-        <TouchableOpacity style={styles.addCatBtn} onPress={() => navigation.navigate('RegisterGato')}>
+        <TouchableOpacity style={styles.addCatBtn} onPress={() => navigation.navigate('RegisterCat')}>
           <Text style={styles.ButtonText}> CADASTRAR GATO </Text>
           <Image source={require('../../assets/images/icon_cat.webp')} style={styles.catIcon} />
           <Ionicons name="add" style={[{marginRight:2}]} size={18} color="#fff" />

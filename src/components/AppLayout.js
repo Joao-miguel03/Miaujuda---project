@@ -45,10 +45,10 @@ export default function AppLayout({ navigation, children }) {
         <TouchableOpacity onPress={() => navigation.navigate('NewsList')}>
           <Entypo name="news" size={24} color={colors.marrom} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Pets')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Info')}>
           <MaterialIcons name="pets" size={24} color={colors.marrom} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Consultas')}>
+        <TouchableOpacity onPress={() => navigation.navigate('AgendaConsultas')}>
           <Ionicons name="calendar-outline" size={24} color={colors.marrom} />
         </TouchableOpacity>
       </View>
