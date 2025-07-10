@@ -16,13 +16,12 @@ async function apiFetch(endpoint, options = {}) {
     headers,
   });
 
-  // ⚠️ Tenta ler como texto primeiro, pois o body pode vir vazio
+  
   const text = await res.text();
 
-  // Se houver corpo, tenta converter para JSON
+ 
   const data = text ? JSON.parse(text) : null;
 
-  // Se a resposta não for OK, lança erro
   if (!res.ok) {
     throw new Error(data?.message || "Erro na requisição");
   }

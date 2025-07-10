@@ -18,32 +18,37 @@ export default function AgendaScreen({ navigation }) {
   const [consultasPorMes, setConsultasPorMes] = useState({});
 
   useEffect(() => {
+  if (usuario?.id) {
     carregarConsultas();
-  }, [usuario]);
+  }
+}, [usuario]);
 
-  const carregarConsultas = async () => {
-    if (!usuario?.id) return;
+const carregarConsultas = async () => {
+  try {
+    const todasConsultas = await listarConsultas();
+    const veterinarios = await buscarVeterinarioPorUsuario(usuario.id);
 
-    try {
-      const todasConsultas = await listarConsultas();
-      const veterinarios = await buscarVeterinarioPorUsuario(usuario.id);
-      const isVeterinarioLogado = veterinarios?.some(v => v.id_usuario === usuario.id);
+    const isVeterinarioLogado = Array.isArray(veterinarios) &&
+      veterinarios.some(v => v.id_usuario === usuario.id);
 
-      let consultasFiltradas = [];
+    let consultasFiltradas = [];
 
-      if (isVeterinarioLogado) {
-        const veterinarioAtual = veterinarios.find(v => v.id_usuario === usuario.id);
+    if (isVeterinarioLogado) {
+      const veterinarioAtual = veterinarios.find(v => v.id_usuario === usuario.id);
+      if (veterinarioAtual?.id) {
         consultasFiltradas = todasConsultas.filter(c => c.id_profissional === veterinarioAtual.id);
-      } else {
-        consultasFiltradas = todasConsultas.filter(c => c.id_cliente_usuario === usuario.id);
       }
-
-      setConsultas(consultasFiltradas);
-      agruparConsultasPorMes(consultasFiltradas);
-    } catch (err) {
-      console.error("Erro ao carregar consultas:", err);
+    } else {
+      consultasFiltradas = todasConsultas.filter(c => c.id_cliente_usuario === usuario.id);
     }
-  };
+
+    setConsultas(consultasFiltradas);
+    agruparConsultasPorMes(consultasFiltradas);
+
+  } catch (err) {
+    console.error("Erro ao carregar consultas:", err);
+  }
+};
 
   const agruparConsultasPorMes = (lista) => {
     const agrupadas = {};
@@ -139,7 +144,7 @@ const styles = StyleSheet.create({
     margin: 2,
   },
   markedDay: {
-    borderColor: colors.bege,
+    borderColor: colors.red,
     borderWidth: 2,
   },
   dayText: {

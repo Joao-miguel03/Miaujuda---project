@@ -6,6 +6,7 @@ import { colors } from '../../styles/colors';
 import { AuthContext } from '../../context/AuthContext';
 import { criarConsulta } from '../../api/consulta'; 
 import { buscarVeterinarioPorUsuario } from '../../api/veterinario';
+import { listarUsuarios } from '../../api/usuario';
 
 export default function CadastrarConsultaScreen({ navigation }) {
   const { usuario } = useContext(AuthContext);
@@ -18,15 +19,16 @@ export default function CadastrarConsultaScreen({ navigation }) {
   const [emailCliente, setEmailCliente] = useState('');
 
   useEffect(()=>{
-    async function carregarVeterinario() {
+    async function carregarVeterinario_Cliente() {
         if (usuario?.id) {
-            const res = await buscarVeterinarioPorUsuario(usuario.id);
-            if (res && res.length) {
-                setVeterinario(res[0]);
+            const resVet = await buscarVeterinarioPorUsuario(usuario.id);
+
+            if (resVet && resVet.length) {
+                setVeterinario(resVet[0]);
             }
         }
     }
-    carregarVeterinario();
+    carregarVeterinario_Cliente();
 
   }, [usuario]);
 
@@ -42,6 +44,22 @@ export default function CadastrarConsultaScreen({ navigation }) {
     }
 
     try {
+      const resClienteLista = await listarUsuarios();
+      const usuarios = resClienteLista.data || resClienteLista;
+      const usuarioEncontrado = usuarios.find((u) => u.email === emailCliente);
+
+      if (!usuarioEncontrado) {
+        Alert.alert('Erro', 'Cliente com esse e-mail não encontrado.');
+        return;
+      }
+
+      const resVeterinarioDoCliente = await buscarVeterinarioPorUsuario(usuarioEncontrado.id);
+      
+      if (resVeterinarioDoCliente && resVeterinarioDoCliente.length > 0) {
+        Alert.alert('Erro', 'Você não pode marcar uma consulta para outro veterinário.');
+        return;
+      }
+
       const consulta = {
         data,
         tipo,
@@ -49,17 +67,19 @@ export default function CadastrarConsultaScreen({ navigation }) {
         valor: parseFloat(valor),
         nome_cliente_gato: nomeClienteGato,
         id_profissional: veterinario.id,
-        email_cliente: emailCliente
+        id_cliente_usuario: usuarioEncontrado.id,
       };
 
       await criarConsulta(consulta);
       Alert.alert('Sucesso', 'Consulta cadastrada com sucesso!');
       navigation.goBack();
+      
     } catch (error) {
       console.error('Erro ao cadastrar consulta:', error);
       Alert.alert('Erro', 'Não foi possível cadastrar.');
     }
   };
+
 
   return (
     <AppLayout navigation={navigation}>
