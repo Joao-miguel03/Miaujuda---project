@@ -60,10 +60,14 @@ export default function HomeScreen({ navigation }) {
     carregarDados();
   }, []);
 
-  const renderMiniCards = (data, nav, mostrarTitulo = false) => (
+  const renderMiniCards = (data, nav, navDetails, mostrarTitulo = false) => (
     <>
       {data.slice(0, 4).map((item, index) => (
-        <View key={index} style={styles.cardContainer}>
+      <TouchableOpacity key={index} onPress={()=>{
+       navigation.navigate(navDetails, {SuperId: item.id})
+      }}
+      style={styles.cardContainer}
+      >
           <Image
             source={
               item.imagem_perfil || item.imagem
@@ -75,7 +79,7 @@ export default function HomeScreen({ navigation }) {
             style={styles.cardImage}
           />
           <Text style={styles.cardLabel}>{mostrarTitulo ? item.titulo || 'Sem título' : item.nome || 'Nome não informado'}</Text>
-        </View>
+        </TouchableOpacity>
       ))}
       <TouchableOpacity onPress={()=> navigation.navigate(nav)} style={styles.verMaisBtn}>
         <Ionicons name="chevron-forward" size={24} color="#fff" />
@@ -103,7 +107,7 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>VETERINÁRIOS</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={globalStyles.scrollHorizontal}>
-            {renderMiniCards(veterinarios, nav='VeterinarianList')}
+            {renderMiniCards(veterinarios, nav='VeterinarianList', navDetails='DetailsVeterinarian')}
           </ScrollView>
         </View>
 
@@ -116,21 +120,23 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>GATOS PARA ADOTAR</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={globalStyles.scrollHorizontal}>
-            {renderMiniCards(gatos, nav='CatList')}
+            {renderMiniCards(gatos, nav='CatList', navDetails='DetailsCat')}
           </ScrollView>
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>LAR TEMPORÁRIO</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={globalStyles.scrollHorizontal}>
-            {renderMiniCards(lares, nav='ListLarTemp')}
+            {renderMiniCards(lares, nav='ListLarTemp', navDetails='DetailsUser')}
           </ScrollView>
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>NOTÍCIAS</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={globalStyles.scrollHorizontal}>
-            {renderMiniCards(noticias,nav='NewsList', mostrarTitulo=true)}
+            {renderMiniCards(noticias,nav='NewsList',  navDetails='DetailsNews',
+            mostrarTitulo=true
+            )}
           </ScrollView>
         </View>
 

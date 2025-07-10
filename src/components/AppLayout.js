@@ -7,13 +7,19 @@ import { AuthContext } from '../context/AuthContext';
 export default function AppLayout({ navigation, children }) {
   const { usuario } = useContext(AuthContext);
 
+  const isHomeScreen =
+    navigation?.getState()?.routes?.[navigation.getState().index]?.name === 'Home';
+  const canGoBack = navigation?.canGoBack?.();
+
   return (
     <View style={styles.container}>
       {/* HEADER */}
       <View style={styles.header}>
-        <TouchableOpacity>
-          <Ionicons name="notifications-outline" size={26} color={colors.marrom} />
-        </TouchableOpacity>
+        {canGoBack && !isHomeScreen && (
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="chevron-back" size={26} color={colors.marrom} />
+          </TouchableOpacity>
+        )}
 
         <View style={styles.userInfo}>
           <Text style={styles.username}>
