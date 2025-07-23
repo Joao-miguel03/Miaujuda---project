@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView, Linking, StyleSheet, } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ScrollView, Linking, StyleSheet, Platform, } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AppLayout from '../../components/AppLayout';
 import { colors } from '../../styles/colors';
@@ -41,22 +41,33 @@ export default function NewsListScreen({ navigation }) {
         {/* Lista de notícias */}
         {noticias.map((noticia) => (
           <View key={noticia.id} style={globalStyles.card}>
-            <Image
-              source={
-                noticia.imagem
-                  ? { uri: noticia.imagem }
-                  : require('../../../assets/images/newsDefault.jpeg')
-              }
-              style={globalStyles.cardImage}
-            />
+            <TouchableOpacity onPress={() => navigation.navigate("DetailsNews")}>
+              <Image
+                source={
+                  noticia.imagem
+                    ? { uri: noticia.imagem }
+                    : require('../../../assets/images/newsDefault.jpeg')
+                }
+                style={globalStyles.cardImage}
+              />
+            </TouchableOpacity>
             <Text style={styles.titulo}>{noticia.titulo}</Text>
             <Text style={styles.conteudo} numberOfLines={3}>
               {noticia.conteudo}
             </Text>
             <View style={styles.footerCard}>
-              <TouchableOpacity onPress={() => Linking.openURL(noticia.link_materia)}>
+              <TouchableOpacity
+                onPress={() => {
+                  if (Platform.OS === 'web') {
+                    Linking.openURL(noticia.link_materia);
+                  } else {
+                    navigation.navigate('NewsWebView', { url: noticia.link_materia });
+                  }
+                }}
+              >
                 <Text style={styles.link}>Ver notícia</Text>
               </TouchableOpacity>
+
               <Text style={styles.autor}>
                 {noticia.autor || 'Autor desconhecido'}
               </Text>

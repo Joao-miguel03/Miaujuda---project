@@ -3,8 +3,11 @@ import { View, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
 import { Ionicons, MaterialIcons, Entypo } from '@expo/vector-icons';
 import { colors } from '../styles/colors';
 import { AuthContext } from '../context/AuthContext';
+import { useNavigation } from '@react-navigation/native';
 
-export default function AppLayout({ navigation, children }) {
+export default function AppLayout({ navigation: navFromProps, children }) {
+  const navigation = navFromProps || useNavigation();
+
   const { usuario } = useContext(AuthContext);
 
   const isHomeScreen =
@@ -15,11 +18,17 @@ export default function AppLayout({ navigation, children }) {
     <View style={styles.container}>
       {/* HEADER */}
       <View style={styles.header}>
-        {canGoBack && !isHomeScreen && (
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="chevron-back" size={26} color={colors.marrom} />
-          </TouchableOpacity>
-        )}
+        <View style={styles.leftSection}>
+          <Image
+            source={require('../../assets/images/logo.png')}
+            style={styles.logoMini}
+          />
+          {canGoBack && !isHomeScreen && (
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+              <Ionicons name="chevron-back" size={26} color={colors.marrom} />
+            </TouchableOpacity>
+          )}
+        </View>
 
         <View style={styles.userInfo}>
           <Text style={styles.username}>
@@ -45,18 +54,32 @@ export default function AppLayout({ navigation, children }) {
 
       {/* FOOTER */}
       <View style={styles.footer}>
-        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+        
+        <TouchableOpacity onPress={() => {
+          if (usuario?.is_admin) {
+            navigation.navigate('AdminMenu');
+          } else {
+            navigation.navigate('Home');
+          }
+        }}
+        >
           <Ionicons name="home" size={24} color={colors.marrom} />
         </TouchableOpacity>
+
         <TouchableOpacity onPress={() => navigation.navigate('NewsList')}>
           <Entypo name="news" size={24} color={colors.marrom} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Info')}>
+        <TouchableOpacity onPress={() => navigation.navigate('CatList')}>
           <MaterialIcons name="pets" size={24} color={colors.marrom} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('AgendaConsultas')}>
+
+        {!usuario?.is_admin && (
+          <TouchableOpacity onPress={() => navigation.navigate('AgendaConsultas')}>
           <Ionicons name="calendar-outline" size={24} color={colors.marrom} />
-        </TouchableOpacity>
+          </TouchableOpacity>
+        )}
+        
+
       </View>
     </View>
   );
@@ -73,6 +96,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
     backgroundColor: colors.bege,
+  },
+  leftSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  logoMini: {
+    width: 32,
+    height: 32,
+    resizeMode: 'contain',
+    marginRight: 8,
+  },
+  backButton: {
+    marginLeft: 4,
   },
   userInfo: {
     flexDirection: 'row',

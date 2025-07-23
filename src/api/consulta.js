@@ -9,7 +9,7 @@ async function listarConsultas() {
 
 // 🔍 READ (por ID)
 async function buscarConsultaPorId(id) {
-  return await apiFetch(`${TABELA}?id=eq.${id}`);
+  return await apiFetch(`${TABELA}?id=eq.${id}&select=*)`);
 }
 
 // ➕ CREATE

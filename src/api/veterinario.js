@@ -4,12 +4,12 @@ const TABELA = "veterinario";
 
 // 🔍 READ (todos)
 async function listarVeterinarios() {
-  return await apiFetch(`${TABELA}?select=*`);
+  return await apiFetch(`${TABELA}?select=*, usuario(id, nome, imagem_perfil)`);
 }
 
 // 🔍 READ (por ID)
 async function buscarVeterinarioPorId(id) {
-  return await apiFetch(`${TABELA}?id=eq.${id}`);
+  return await apiFetch(`${TABELA}?id=eq.${id}&select=*,usuario(*)`);
 }
 
 // 🔍 READ (por ID do usuário)
@@ -32,6 +32,14 @@ async function atualizarVeterinario(id, novosDados) {
     body: JSON.stringify(novosDados),
   });
 }
+async function atualizarAvaliacaoVeterinario(id, novosDados) {
+  return await apiFetch(`${TABELA}?id=eq.${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(novosDados),
+  });
+}
+
+
 
 // ❌ DELETE
 async function deletarVeterinario(id) {
@@ -46,5 +54,6 @@ module.exports = {
   buscarVeterinarioPorUsuario,
   criarVeterinario,
   atualizarVeterinario,
+  atualizarAvaliacaoVeterinario,
   deletarVeterinario,
 };

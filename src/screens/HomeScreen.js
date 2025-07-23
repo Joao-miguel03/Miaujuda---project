@@ -4,6 +4,7 @@ import AppLayout from '../components/AppLayout';
 import { globalStyles } from '../styles/globalStyles';
 import { colors } from '../styles/colors';
 import { listarVeterinarios } from '../api/veterinario';
+import { listarConsultas } from '../api/consulta';
 import { listarGatos } from '../api/gato';
 import { listarNoticias } from '../api/noticia';
 import { listarUsuarios } from '../api/usuario';
@@ -12,6 +13,7 @@ import { AuthContext } from '../context/AuthContext';
 
 export default function HomeScreen({ navigation }) {
   const {usuario} = useContext(AuthContext);
+  const [consultas, setConsultas] = useState([]);
 
   const [veterinarios, setVeterinarios] = useState([]);
   const [gatos, setGatos] = useState([]);
@@ -20,6 +22,32 @@ export default function HomeScreen({ navigation }) {
   const [noticias, setNoticias] = useState([]);
 
   const isVeterinarioLogado = veterinarios.some(v => v.id_usuario === usuario?.id);
+
+  const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+  const hoje = new Date();
+  const miniCalendario = Array.from({ length: 7 }, (_, i) => {
+    const dia = new Date();
+    dia.setDate(hoje.getDate() + i);
+    return {
+      dia: dia.getDate(),
+      semana: diasSemana[dia.getDay()],
+      dataCompleta: dia,
+    };
+  });
+
+  useEffect(() => {
+    async function carregarConsultas() {
+      try {
+        const res = await listarConsultas();
+        const lista = res.data || res;
+        setConsultas(lista);
+      } catch (e) {
+        console.error("Erro ao buscar consultas:", e);
+      }
+    }
+
+    carregarConsultas();
+  }, []);
 
   useEffect(() => {
     async function carregarDados() {
@@ -87,6 +115,15 @@ export default function HomeScreen({ navigation }) {
     </>
   );
 
+  const diasComConsulta = miniCalendario.map(diaObj => {
+    const dataFormatada = diaObj.dataCompleta.toISOString().split('T')[0];
+    const consultasDoDia = consultas.filter(c => c.data === dataFormatada);
+    return {
+      ...diaObj,
+      consultas: consultasDoDia,
+    };
+  });
+
   return (
     <AppLayout navigation={navigation}>
       <ScrollView contentContainerStyle={globalStyles.scrollVertical}>
@@ -107,7 +144,7 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>VETERINÁRIOS</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={globalStyles.scrollHorizontal}>
-            {renderMiniCards(veterinarios, nav='VeterinarianList', navDetails='DetailsVeterinarian')}
+            {renderMiniCards(veterinarios, 'VeterinarianList', 'DetailsVeterinarian')}
           </ScrollView>
         </View>
 
@@ -120,26 +157,53 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>GATOS PARA ADOTAR</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={globalStyles.scrollHorizontal}>
-            {renderMiniCards(gatos, nav='CatList', navDetails='DetailsCat')}
+            {renderMiniCards(gatos, 'CatList', 'DetailsCat')}
           </ScrollView>
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>LAR TEMPORÁRIO</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={globalStyles.scrollHorizontal}>
-            {renderMiniCards(lares, nav='ListLarTemp', navDetails='DetailsUser')}
+            {renderMiniCards(lares, 'ListCuidador', 'DetailsUser')}
           </ScrollView>
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>NOTÍCIAS</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={globalStyles.scrollHorizontal}>
-            {renderMiniCards(noticias,nav='NewsList',  navDetails='DetailsNews',
-            mostrarTitulo=true
+            {renderMiniCards(noticias,'NewsList',  'DetailsNews', true
             )}
           </ScrollView>
         </View>
 
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>PRÓXIMOS DIAS</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={globalStyles.scrollHorizontal}>
+          {diasComConsulta.map((d, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[styles.dayBox, d.consultas.length > 0 && { borderColor: 'red', borderWidth: 2 }]}
+              onPress={() => {
+                if (d.consultas.length === 1) {
+                  navigation.navigate('DetailsConsulta', { idConsulta: d.consultas[0].id });
+                } else if (d.consultas.length > 1) {
+                  navigation.navigate('AgendaConsultas', { data: d.dataCompleta });
+                }
+              }}
+            >
+              <Text style={styles.diaTexto}>{d.dia}</Text>
+              <Text style={styles.semanaTexto}>{d.semana}</Text>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity
+            onPress={() => navigation.navigate('AgendaConsultas')}
+            style={[styles.verMaisBtn, { marginTop: 12, borderWidth: 1, borderColor: colors.branco, borderRadius: 12, padding: 8 }]}
+          >
+            <Text style={{ color: colors.branco, fontWeight: 'bold' }}>Ver mais</Text>
+            <Ionicons name="calendar-outline" size={18} color="#fff" style={{ marginLeft: 6 }} />
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
 
       </ScrollView>
     </AppLayout>
@@ -227,4 +291,48 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 16,
   },
+    calendarSection: {
+    paddingHorizontal: 20,
+    paddingBottom: 40,
+    alignItems: 'center',
+  },
+  calendarBox: {
+    backgroundColor: colors.bege,
+    borderRadius: 16,
+    padding: 16,
+    width: '100%',
+    alignItems: 'center',
+  },
+  calendarTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: colors.marrom,
+    marginBottom: 12,
+  },
+  calendarGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginBottom: 12,
+  },
+  dayBox: {
+    backgroundColor: colors.marrom,
+    borderColor: colors.bege,
+    borderWidth: 1,
+    borderRadius: 12,
+    padding: 10,
+    alignItems: 'center',
+    marginHorizontal: 8,
+    width: 60,
+  },
+  diaTexto: {
+    color: colors.branco,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  semanaTexto: {
+    color: colors.bege,
+    fontSize: 14,
+  },
+
 });

@@ -48,31 +48,38 @@ export default function ProfileScreen({ navigation }) {
             <Text style={styles.ola}>Olá</Text>
             <Text style={styles.userName}>{usuario?.nome}</Text>
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate('EditarPerfil')} style={styles.editButton}>
+          <TouchableOpacity onPress={() => navigation.navigate('EditProfile')} style={styles.editButton}>
             <Ionicons name="create-outline" size={20} color={colors.marrom} />
           </TouchableOpacity>
         </View>
       </View>
 
       {/* O que é lar temporário */}
-      <Modal visible={showModal}>
+      <Modal
+        visible={showModal}
+        animationType="fade"
+        transparent
+        onRequestClose={() => setShowModal(false)}
+      >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalBox}>
+          <View style={styles.modalCard}>
             <Text style={styles.modalTitle}>O que é ser um lar temporário?</Text>
             <Text style={styles.modalText}>
-              Um lar temporário abriga gatos resgatados até encontrarem um lar definitivo. Você pode ajudar um animal a se recuperar e ser adotado com amor e segurança.
+              Um lar temporário acolhe gatos até que eles sejam adotados. Você oferece abrigo, cuidados e carinho por um tempo. É uma forma linda de ajudar!
             </Text>
-            <View style={styles.modalButtons}>
-              <TouchableOpacity style={styles.modalButton} onPress={confirmCuidador}>
-                <Text style={styles.modalButtonText}>Confirmar</Text>
+
+            <View style={styles.modalActions}>
+              <TouchableOpacity onPress={confirmCuidador} style={styles.modalButtonPrimary}>
+                <Text style={styles.modalButtonPrimaryText}>Quero ajudar!</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.modalButton} onPress={() => setShowModal(false)}>
-                <Text style={styles.modalButtonText}>Cancelar</Text>
+              <TouchableOpacity onPress={() => setShowModal(false)} style={styles.modalButtonSecondary}>
+                <Text style={styles.modalButtonSecondaryText}>Cancelar</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </Modal>
+
 
       {/* Main */}
       <View style={styles.main}>
@@ -162,40 +169,59 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.6)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
-  modalBox: {
+  modalCard: {
     backgroundColor: colors.bege,
-    borderRadius: 12,
-    padding: 20,
+    borderRadius: 16,
+    padding: 24,
     width: '100%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 10,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: colors.marrom,
-    marginBottom: 10,
+    marginBottom: 16,
+    textAlign: 'center',
   },
   modalText: {
-    fontSize: 14,
+    fontSize: 15,
     color: colors.marrom,
-    marginBottom: 20,
+    marginBottom: 24,
+    textAlign: 'center',
+    lineHeight: 22,
   },
-  modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+  modalActions: {
+    flexDirection: 'column',
+    gap: 12,
   },
-  modalButton: {
+  modalButtonPrimary: {
+    backgroundColor: colors.marrom,
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalButtonPrimaryText: {
+    color: colors.branco,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  modalButtonSecondary: {
     backgroundColor: colors.marromClaro,
     paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 6,
+    borderRadius: 10,
+    alignItems: 'center',
   },
-  modalButtonText: {
+  modalButtonSecondaryText: {
     color: colors.branco,
-    fontWeight: 'bold',
+    fontSize: 15,
   },
 });
