@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { AuthContext } from '../../context/AuthContext';
 import { listarConsultas } from '../../api/consulta';
 import { buscarVeterinarioPorUsuario } from '../../api/veterinario';
@@ -84,9 +84,13 @@ const carregarConsultas = async () => {
           {Object.entries(consultasDoMes).map(([dia, consultas]) => (
             <View key={dia}>
               {consultas.map((c, i) => (
-                <Text key={i} style={styles.eventText}>
-                  {dia} - {c.procedimento} ({c.nome_cliente_gato})
-                </Text>
+                <TouchableOpacity onPress={()=> navigation.navigate("DetailsConsulta", {idConsulta: c.id})}
+                >
+                  <Text key={i} style={styles.eventText}>
+                    {dia} - {c.procedimento} ({c.nome_cliente_gato})
+                  </Text>
+                </TouchableOpacity>
+
               ))}
             </View>
           ))}

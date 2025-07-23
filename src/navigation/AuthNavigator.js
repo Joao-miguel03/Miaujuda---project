@@ -16,6 +16,13 @@ import DetailsCatScreen from '../screens/cats/DetailsCatScreen';
 import DetailsUserScreen from '../screens/user/DetailsUserScreen';
 import DetailsVeterinarianScreen from '../screens/veterinarian/DetailsVeterinarianScreen';
 import DetailsNewsScreen from '../screens/news/DetailsNewsScreen';
+import EditProfileScreen from '../screens/user/EditProfileScreen';
+import UserListScreen from '../screens/user/UserListScreen';
+import CatListScreen from '../screens/cats/CatListScreen';
+import NewsWebViewScreen from '../screens/news/NewsWebViewScreen';
+import AdminMenuScreen from '../screens/AdminMenuScreen';
+import VeterinarioListScreen from '../screens/veterinarian/VeterinarianList';
+import DetailsConsultaScreen from '../screens/consulta/DetailsConsulta';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,18 +34,34 @@ export default function AuthNavigator() {
       <Stack.Screen name="Register" component={RegisterScreen} />
       <Stack.Screen name="RecoverPassword" component={RecoverPasswordScreen} />
       <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name='AdminMenu' component={AdminMenuScreen} />
+
       <Stack.Screen name="NewsList" component={NewsListScreen} />
       <Stack.Screen name='DetailsNews' component={DetailsNewsScreen} />
       <Stack.Screen name="RegisterNews" component={RegisterNewsScreen} />
+      <Stack.Screen name="NewsWebView" component={NewsWebViewScreen}
+      options={{title: "Notícia"}} />
+
       <Stack.Screen name = "Profile" component={ProfileScreen} />
+
       <Stack.Screen name = "RegisterVeterinarian" component={RegisterVeterinarianScreen} />
       <Stack.Screen name='DetailsVeterinarian' component={DetailsVeterinarianScreen} />
+      <Stack.Screen name='VeterinarianList' component={VeterinarioListScreen} />
       <Stack.Screen name='MarcarConsulta' component={CadastrarConsultaScreen} />
       <Stack.Screen name='AgendaConsultas' component={AgendaConsultasScreen} />
+      <Stack.Screen name='DetailsConsulta' component={DetailsConsultaScreen} />
+
       <Stack.Screen name='RegisterCat' component={RegisterCatScreen} />
       <Stack.Screen name='DetailsCat' component={DetailsCatScreen} />
+      <Stack.Screen name='CatList' component={CatListScreen} />
 
       <Stack.Screen name='DetailsUser' component={DetailsUserScreen} />
+      <Stack.Screen name='EditProfile' component={EditProfileScreen} />
+      <Stack.Screen name='UserList' component={UserListScreen} />
+      <Stack.Screen name='ListCuidador' component={UserListScreen} />
+
+
+
     </Stack.Navigator>
   );
 }

@@ -27,6 +27,19 @@ async function atualizarGato(id, novosDados) {
     body: JSON.stringify(novosDados),
   });
 }
+async function adotarGato(id, id_usuario) {
+  return await atualizarGato(id, {
+    id_usuario_adotou: id_usuario,
+    id_usuario_cuidador: null,
+  });
+}
+async function cuidarGato(id, id_usuario) {
+  return await atualizarGato(id, {
+    id_usuario_cuidador: id_usuario,
+    id_usuario_adotou: null,
+  });
+}
+
 
 // ❌ DELETE
 async function deletarGato(id) {
@@ -41,4 +54,6 @@ module.exports = {
   criarGato,
   atualizarGato,
   deletarGato,
+  adotarGato,
+  cuidarGato,
 };

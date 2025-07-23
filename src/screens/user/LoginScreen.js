@@ -20,7 +20,9 @@ export default function LoginScreen({ navigation }) {
 
       if (usuarioEncontrado && bcrypt.compareSync(senha, usuarioEncontrado.senha)) {
         login(usuarioEncontrado);
-        navigation.replace('Home');
+        if (usuarioEncontrado.is_admin) {navigation.replace('AdminMenu')} else
+          {navigation.replace('Home')}
+        
       } else {
         Alert.alert('Erro','Email ou senha inválidas');
       }

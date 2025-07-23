@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Image, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, Image, StyleSheet, TouchableOpacity, Platform, Linking } from 'react-native';
 import AppLayout from '../../components/AppLayout';
 import { colors } from '../../styles/colors';
 import { buscarNoticiaPorId } from '../../api/noticia';
@@ -24,9 +24,7 @@ export default function DetailsNewsScreen({ route, navigation }) {
   if (!noticia) {
     return (
       <AppLayout navigation={navigation}>
-        <Text style={{ color: '#fff', textAlign: 'center', marginTop: 40 }}>
-          Notícia não encontrada. Volte e tente novamente.
-        </Text>
+        <Text style={styles.carregando}>Notícia não encontrada. Volte e tente novamente.</Text>
       </AppLayout>
     );
   }
@@ -34,18 +32,35 @@ export default function DetailsNewsScreen({ route, navigation }) {
   return (
     <AppLayout navigation={navigation}>
       <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>NOTÍCIA</Text>
+        <Text style={styles.title}>DETALHES DA NOTÍCIA</Text>
+
+        <View style={styles.headerBox}>
+          {noticia.imagem && (
+            <Image source={{ uri: noticia.imagem }} style={styles.imagem} />
+          )}
+          <Text style={styles.titulo}>{noticia.titulo}</Text>
+          <Text style={styles.autor}>
+            por {noticia.autor || 'Desconhecido'} - {new Date(noticia.criado_em).toLocaleDateString()}
+          </Text>
         </View>
 
-        {noticia.imagem && (
-          <Image source={{ uri: noticia.imagem }} style={styles.imagem} />
-        )}
-
         <View style={styles.card}>
-          <Text style={styles.titulo}>{noticia.titulo}</Text>
-          <Text style={styles.autor}>por {noticia.autor || 'Desconhecido'} - {new Date(noticia.criado_em).toLocaleDateString()}</Text>
           <Text style={styles.texto}>{noticia.conteudo}</Text>
+        </View>
+
+        <View style={styles.footerCard}>
+          <TouchableOpacity
+            style={styles.botao}
+            onPress={() => {
+              if (Platform.OS === 'web') {
+                Linking.openURL(noticia.link_materia);
+              } else {
+                navigation.navigate('NewsWebView', { url: noticia.link_materia });
+              }
+            }}
+          >
+            <Text style={styles.botaoTexto}>VISUALIZAR NA ÍNTEGRA</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </AppLayout>
@@ -56,46 +71,72 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.marrom,
     paddingBottom: 40,
+    paddingHorizontal: 16,
   },
-  header: {
-    backgroundColor: colors.bege,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    alignItems: 'center',
-    paddingVertical: 20,
+  carregando: {
+    color: colors.branco,
+    textAlign: 'center',
+    marginTop: 40,
   },
   title: {
-    color: '#fff',
+    color: colors.branco,
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 20,
+    textAlign: 'center',
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  headerBox: {
+    backgroundColor: colors.bege,
+    borderRadius: 20,
+    alignItems: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    marginBottom: 20,
   },
   imagem: {
     width: '100%',
-    height: 200,
-    resizeMode: 'cover',
-  },
-  card: {
-    margin: 20,
-    backgroundColor: colors.marromEscuro,
-    borderRadius: 15,
-    padding: 20,
+    height: 180,
+    borderRadius: 10,
+    marginBottom: 12,
   },
   titulo: {
-    fontSize: 17,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 8,
+    color: colors.marrom,
+    marginBottom: 6,
     textAlign: 'center',
   },
   autor: {
     fontSize: 12,
-    color: colors.cinzaClaro,
-    marginBottom: 12,
+    color: colors.marrom,
     textAlign: 'center',
+  },
+  card: {
+    backgroundColor: colors.marromEscuro,
+    borderRadius: 15,
+    padding: 20,
+    marginBottom: 20,
   },
   texto: {
     fontSize: 14,
     color: '#fff',
     textAlign: 'justify',
+    lineHeight: 22,
+  },
+  footerCard: {
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  botao: {
+    backgroundColor: colors.bege,
+    borderRadius: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 40,
+  },
+  botaoTexto: {
+    color: colors.marrom,
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });

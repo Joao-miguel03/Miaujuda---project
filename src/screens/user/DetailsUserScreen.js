@@ -6,9 +6,8 @@ import { buscarUsuarioPorId } from '../../api/usuario';
 import { AuthContext } from '../../context/AuthContext';
 
 export default function DetailsUserScreen({ route, navigation }) {
-  const userId  = route?.params?.SuperId;
+  const userId = route?.params?.userId || route?.params?.SuperId;
   const { usuario: usuarioLogado } = useContext(AuthContext);
-
   const [usuario, setUsuario] = useState(null);
 
   useEffect(() => {
@@ -22,7 +21,9 @@ export default function DetailsUserScreen({ route, navigation }) {
       }
     }
 
-    carregarDados();
+    if (userId) {
+      carregarDados();
+    }
   }, [userId]);
 
   if (!usuario) {
@@ -33,28 +34,25 @@ export default function DetailsUserScreen({ route, navigation }) {
     );
   }
 
-  const podeEditar = usuarioLogado?.is_admin;
+  const podeEditar = usuarioLogado?.is_admin && usuario.email != "admin@miau.com";
 
   return (
     <AppLayout navigation={navigation}>
       <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>DETALHES DO USUÁRIO</Text>
+        {/* Título */}
+        <Text style={styles.title}>DETALHES DO USUÁRIO</Text>
+
+        {/* Box com imagem e nome */}
+        <View style={styles.headerBox}>
           <Image
-            source={usuario.imagem_perfil ? { uri: usuario.imagem_perfil } : require('../../../assets/images/defaultprofile.jpeg')}
+            source={
+              usuario.imagem_perfil
+                ? { uri: usuario.imagem_perfil }
+                : require('../../../assets/images/defaultprofile.jpeg')
+            }
             style={styles.fotoUsuario}
           />
-        </View>
-
-        <View style={styles.card}>
-          <View style={styles.infoBox}>
-            <Text style={styles.info}><Text style={styles.bold}>Nome:</Text> {usuario.nome || 'Não informado'}</Text>
-            <Text style={styles.info}><Text style={styles.bold}>Telefone:</Text> {usuario.telefone || 'Não informado'}</Text>
-            <Text style={styles.info}><Text style={styles.bold}>Email:</Text> {usuario.email || 'Não informado'}</Text>
-            <Text style={styles.info}><Text style={styles.bold}>Região:</Text> {usuario.regiao || 'Não informado'}</Text>
-            <Text style={styles.info}><Text style={styles.bold}>Tipo:</Text> {usuario.is_cuidador ? 'Lar Temporário' : 'Usuário'}</Text>
-            <Text style={styles.info}><Text style={styles.bold}>Admin:</Text> {usuario.is_admin ? 'Sim' : 'Não'}</Text>
-          </View>
+          <Text style={styles.nomeUsuario}>{usuario.nome || 'Sem nome'}</Text>
 
           {podeEditar && (
             <TouchableOpacity
@@ -65,71 +63,86 @@ export default function DetailsUserScreen({ route, navigation }) {
             </TouchableOpacity>
           )}
         </View>
+
+        {/* Informações */}
+        <View style={styles.card}>
+          <Text style={styles.info}><Text style={styles.bold}>Telefone:</Text> {usuario.telefone || 'Não informado'}</Text>
+          <Text style={styles.info}><Text style={styles.bold}>Email:</Text> {usuario.email || 'Não informado'}</Text>
+          <Text style={styles.info}><Text style={styles.bold}>Região:</Text> {usuario.regiao || 'Não informada'}</Text>
+          <Text style={styles.info}><Text style={styles.bold}>Tipo:</Text> {usuario.is_cuidador ? 'Lar Temporário' : 'Usuário'}</Text>
+          <Text style={styles.info}><Text style={styles.bold}>Admin:</Text> {usuario.is_admin ? 'Sim' : 'Não'}</Text>
+        </View>
       </ScrollView>
     </AppLayout>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.marrom,
     paddingBottom: 40,
+    paddingHorizontal: 16,
   },
   carregando: {
     color: colors.branco,
     textAlign: 'center',
     marginTop: 40,
   },
-  header: {
+  title: {
+    color: colors.branco,
+    fontWeight: 'bold',
+    fontSize: 20,
+    textAlign: 'center',
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  headerBox: {
     backgroundColor: colors.bege,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    borderRadius: 20,
     alignItems: 'center',
     paddingVertical: 20,
-  },
-  title: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 18,
-    marginBottom: 10,
+    paddingHorizontal: 10,
+    marginBottom: 20,
   },
   fotoUsuario: {
     width: 100,
     height: 100,
     borderRadius: 50,
     borderWidth: 2,
-    borderColor: '#fff',
+    borderColor: colors.marrom,
+    marginBottom: 12,
   },
-  card: {
-    margin: 20,
-    backgroundColor: '#1E0F06',
-    borderRadius: 15,
-    padding: 20,
-    alignItems: 'center',
-  },
-  infoBox: {
-    alignSelf: 'stretch',
-    marginBottom: 15,
-  },
-  info: {
-    color: '#fff',
-    fontSize: 14,
-    marginBottom: 4,
-  },
-  bold: {
-    color: colors.branco,
+  nomeUsuario: {
+    fontSize: 18,
     fontWeight: 'bold',
+    color: colors.marrom,
+    marginBottom: 10,
   },
   botao: {
-    backgroundColor: colors.bege,
+    backgroundColor: colors.marrom,
     borderRadius: 20,
     paddingVertical: 8,
     paddingHorizontal: 32,
     marginTop: 10,
   },
   botaoTexto: {
-    color: colors.marrom,
+    color: colors.branco,
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  card: {
+    backgroundColor: '#1E0F06',
+    borderRadius: 15,
+    padding: 20,
+    marginBottom: 20,
+  },
+  info: {
+    color: '#fff',
+    fontSize: 15,
+    marginBottom: 8,
+    lineHeight: 22,
+  },
+  bold: {
+    fontWeight: 'bold',
+    color: colors.bege,
   },
 });
